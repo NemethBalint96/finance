@@ -1,38 +1,22 @@
 import { format } from "date-fns"
 import prismadb from "@/lib/prismadb"
 import IncomeClient from "./components/client"
-import { TodayIncomeColumn, TransactionColumn } from "./components/columns"
+import { TransactionColumn } from "./components/columns"
 import { auth } from "@clerk/nextjs"
 import { Transaction } from "@prisma/client"
+import { getTodayIncome } from "@/actions/get-today-income"
 
-const IncomePage = async ({ params }: { params: { storeId: string } }) => {
-  let income: Transaction[] = []
-  let formattedTodayIncome: TodayIncomeColumn[] = []
-
+const IncomePage = async () => {
   const { userId } = auth()
-
-  if (userId) {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-    const dailyIncome = await prismadb.transaction.groupBy({
-      by: ["name"],
-      where: { userId: userId, createdAt: { gte: today }, price: { gt: 0 } },
-      _count: { name: true },
-      _sum: { price: true },
-    })
-
-    formattedTodayIncome = dailyIncome.map((item) => ({
-      name: item.name,
-      count: item._count.name,
-      sum: item._sum.price !== null ? item._sum.price : 0,
-    }))
-
-    income = await prismadb.transaction.findMany({
-      where: { userId: userId, price: { gt: 0 } },
-      orderBy: { createdAt: "desc" },
-    })
+  if (userId === null) {
+    return null
   }
+  const formattedTodayIncome = await getTodayIncome(userId)
+  let income: Transaction[] = []
+  income = await prismadb.transaction.findMany({
+    where: { userId: userId, price: { gt: 0 } },
+    orderBy: { createdAt: "desc" },
+  })
 
   const formattedIncome: TransactionColumn[] = income.map((item) => ({
     id: item.id,
