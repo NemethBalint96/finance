@@ -4,104 +4,50 @@ import * as z from "zod"
 import axios from "axios"
 import { useState } from "react"
 import toast from "react-hot-toast"
-import { Trash2 } from "lucide-react"
-import { Transaction } from "@prisma/client"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
-import { AlertModal } from "@/components/modals/alert-modal"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-
-interface ExpenseFormProps {
-  initialData: Transaction | null
-}
 
 const formSchema = z.object({ name: z.string().min(1), price: z.coerce.number().min(1) })
 
-type ExpenseFormValues = z.infer<typeof formSchema>
+type IncomeFormValues = z.infer<typeof formSchema>
 
-export const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
-  const params = useParams()
+export const IncomeForm: React.FC = () => {
   const router = useRouter()
 
-  const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const title = initialData ? "Edit expense" : "Create expense"
-  const description = initialData ? "Edit expense" : "Add a new expense"
-  const toastMessage = initialData ? "Expense updated." : "Expense created."
-  const action = initialData ? "Save changes" : "Create"
-
-  if (initialData) {
-    initialData.price = Math.abs(initialData.price)
-  }
-
-  const form = useForm<ExpenseFormValues>({
+  const form = useForm<IncomeFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || { name: "", price: 1 },
+    defaultValues: { name: "Tip", price: 1 },
   })
 
-  const onSubmit = async (data: ExpenseFormValues) => {
+  const onSubmit = async (data: IncomeFormValues) => {
     try {
       setLoading(true)
-      data.price = -data.price
-      if (initialData) {
-        await axios.patch(`/api/transactions/${params.expenseId}`, data)
-      } else {
-        await axios.post("/api/transactions", data)
-      }
+      await axios.post("/api/transactions", data)
       router.refresh()
-      router.push("/expense")
-      toast.success(toastMessage)
+      router.push("/income")
+      toast.success("Income created.")
     } catch (error) {
       toast.error("Something went wrong.")
     } finally {
       setLoading(false)
-    }
-  }
-
-  const onDelete = async () => {
-    try {
-      setLoading(true)
-      await axios.delete(`/api/transactions/${params.serviceId}`)
-      router.refresh()
-      router.push("/")
-      toast.success("Expense deleted.")
-    } catch (error) {
-      toast.error("Something went wrong.")
-    } finally {
-      setLoading(false)
-      setOpen(false)
     }
   }
 
   return (
     <>
-      <AlertModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-        loading={loading}
-      />
       <div className="flex items-center justify-between">
         <Heading
-          title={title}
-          description={description}
+          title="Create income"
+          description="Add a new income"
         />
-        {initialData && (
-          <Button
-            disabled={loading}
-            variant="destructive"
-            size="icon"
-            onClick={() => setOpen(true)}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        )}
       </div>
       <Separator />
       <Form {...form}>
@@ -151,7 +97,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
             className="ml-auto"
             disabled={loading}
           >
-            {action}
+            Create
           </Button>
         </form>
       </Form>
