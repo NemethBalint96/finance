@@ -4,7 +4,7 @@ import { ExpenseColumn } from "./components/columns"
 import { auth } from "@clerk/nextjs"
 import { Transaction } from "@prisma/client"
 
-const ServicesPage = async () => {
+const ExpensePage = async () => {
   let expense: Transaction[] = []
 
   const { userId } = auth()
@@ -12,7 +12,7 @@ const ServicesPage = async () => {
   if (userId) {
     expense = await prismadb.transaction.findMany({
       where: { userId: userId, price: { lt: 0 } },
-      orderBy: { price: "asc" },
+      orderBy: { createdAt: "desc" },
     })
   }
 
@@ -31,4 +31,4 @@ const ServicesPage = async () => {
   )
 }
 
-export default ServicesPage
+export default ExpensePage
