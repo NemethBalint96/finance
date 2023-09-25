@@ -25,9 +25,9 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
       active: pathname === "/expense",
     },
     {
-      href: "/example",
+      href: "/overview",
       label: <BarChart4 />,
-      active: pathname === "/example",
+      active: pathname === "/overview",
     },
   ]
 
