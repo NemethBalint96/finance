@@ -1,66 +1,86 @@
-import { CreditCard, DollarSign, Package } from "lucide-react"
+import { Equal, TrendingDown, TrendingUp } from "lucide-react"
 import { formatter } from "@/lib/utils"
-import { getSalesCount } from "@/actions/get-sales-count"
-import { getStockCount } from "@/actions/get-stock-count"
-import { getTotalRevenue } from "@/actions/get-total-revenue"
-import { getGraphRevenue } from "@/actions/get-graph-revenue"
 import { Heading } from "@/components/ui/heading"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Overview from "@/components/overview"
+import { auth } from "@clerk/nextjs"
+import { getWeeklySum } from "@/actions/get-weekly-sum"
+import { Separator } from "@/components/ui/separator"
+import { getGraphTransactionsForThisWeek } from "@/actions/get-graph-transactions"
 
-interface DashboardPageProps {
-  params: { storeId: string }
-}
-
-const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
-  const totalRevenue = await getTotalRevenue(params.storeId)
-  const salesCount = await getSalesCount(params.storeId)
-  const stockCount = await getStockCount(params.storeId)
-  const graphRevenue = await getGraphRevenue(params.storeId)
+const DashboardPage: React.FC = async () => {
+  const { userId } = auth()
+  if (!userId) {
+    return <div>Unauthorized</div>
+  }
+  const graphIncome = await getGraphTransactionsForThisWeek(userId)
+  const graphExpense = await getGraphTransactionsForThisWeek(userId, false)
+  const weeklyIncome = await getWeeklySum(userId)
+  const weeklyExpense = await getWeeklySum(userId, false)
+  const weeklySum = weeklyIncome + weeklyExpense
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <Heading
           title="Dashboard"
-          description="Overview of your store"
+          description="Overview of your finance"
         />
-        <div className="grid gap-4 grid-cols-3">
+        <Separator />
+        <Heading
+          title="This Week"
+          description=""
+        />
+        <div className="grid gap-4 grid-cols-2">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Income</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatter.format(totalRevenue)}</div>
+              <div className="text-2xl font-bold">{formatter.format(weeklyIncome)}</div>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Sales</CardTitle>
-              <CreditCard className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Expense</CardTitle>
+              <TrendingDown className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+{salesCount}</div>
+              <div className="text-2xl font-bold">{formatter.format(weeklyExpense)}</div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="col-span-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Products In Stock</CardTitle>
-              <Package className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Sum</CardTitle>
+              <Equal className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stockCount}</div>
+              <div className="text-2xl font-bold">{formatter.format(weeklySum)}</div>
             </CardContent>
           </Card>
         </div>
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Overview</CardTitle>
-            <CardContent className="pl-2">
-              <Overview data={graphRevenue} />
-            </CardContent>
+            <CardTitle>Income</CardTitle>
           </CardHeader>
+          <CardContent className="pl-2">
+            <Overview
+              data={graphIncome}
+              color="#3498db"
+            />
+          </CardContent>
+        </Card>
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Expense</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <Overview
+              data={graphExpense}
+              color="#db3449"
+            />
+          </CardContent>
         </Card>
       </div>
     </div>

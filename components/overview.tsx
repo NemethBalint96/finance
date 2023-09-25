@@ -5,9 +5,10 @@ import { formatter } from "@/lib/utils"
 
 interface OverviewProps {
   data: any[]
+  color: string
 }
 
-const Overview: React.FC<OverviewProps> = ({ data }) => {
+const Overview: React.FC<OverviewProps> = ({ data, color }) => {
   return (
     <ResponsiveContainer
       width="100%"
@@ -30,7 +31,7 @@ const Overview: React.FC<OverviewProps> = ({ data }) => {
         />
         <Bar
           dataKey="total"
-          fill="#3498db"
+          fill={color}
           radius={[4, 4, 0, 0]}
         />
       </BarChart>
