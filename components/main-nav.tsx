@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
-import { ArrowDownCircle, ArrowUpCircle, Home } from "lucide-react"
+import { ArrowDownCircle, ArrowUpCircle, BarChart4, Home } from "lucide-react"
 
 export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname()
@@ -26,7 +26,7 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
     },
     {
       href: "/example",
-      label: "Example",
+      label: <BarChart4 />,
       active: pathname === "/example",
     },
   ]
