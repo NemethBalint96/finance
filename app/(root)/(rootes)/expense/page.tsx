@@ -3,6 +3,7 @@ import ExpenseClient from "./components/client"
 import { ExpenseColumn } from "./components/columns"
 import { auth } from "@clerk/nextjs"
 import { Transaction } from "@prisma/client"
+import { format } from "date-fns"
 
 const ExpensePage = async () => {
   let expense: Transaction[] = []
@@ -20,6 +21,7 @@ const ExpensePage = async () => {
     id: item.id,
     name: item.name,
     price: Math.abs(item.price),
+    createdAt: format(item.createdAt, "MMMM do, yyyy"),
   }))
 
   return (

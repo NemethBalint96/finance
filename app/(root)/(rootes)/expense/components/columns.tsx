@@ -7,6 +7,7 @@ export type ExpenseColumn = {
   id: string
   name: string
   price: number
+  createdAt: string
 }
 
 export const columns: ColumnDef<ExpenseColumn>[] = [
@@ -17,6 +18,10 @@ export const columns: ColumnDef<ExpenseColumn>[] = [
   {
     accessorKey: "price",
     header: "Price",
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Date",
   },
   {
     id: "actions",

@@ -10,9 +10,8 @@ import { getGraphTransactionsForThisWeek } from "@/actions/get-graph-transaction
 
 const DashboardPage: React.FC = async () => {
   const { userId } = auth()
-  if (!userId) {
-    return <div>Unauthorized</div>
-  }
+  if (!userId) return <div>Unauthorized</div>
+
   const graphIncome = await getGraphTransactionsForThisWeek(userId)
   const graphExpense = await getGraphTransactionsForThisWeek(userId, false)
   const weeklyIncome = await getWeeklySum(userId)
