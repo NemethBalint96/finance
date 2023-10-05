@@ -8,9 +8,8 @@ import { getTodayIncome } from "@/actions/get-today-income"
 
 const IncomePage = async () => {
   const { userId } = auth()
-  if (userId === null) {
-    return null
-  }
+  if (userId === null) return null
+
   const formattedTodayIncome = await getTodayIncome(userId)
   let income: Transaction[] = []
   income = await prismadb.transaction.findMany({
