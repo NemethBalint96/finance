@@ -2,7 +2,7 @@ import prismadb from "@/lib/prismadb"
 
 export interface WhereClause {
   userId: string
-  createdAt: { gte: Date }
+  createdAt: { gte: Date; lte?: Date }
   price?: { gt?: number; lt?: number }
 }
 

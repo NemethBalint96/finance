@@ -1,6 +1,6 @@
 import { getWeeklyTransactions } from "./get-weekly-transactions"
 
-interface GraphData {
+export interface GraphData {
   name: string
   total: number
 }
