@@ -10,37 +10,23 @@ import React, { useEffect, useState } from "react"
 import axios from "axios"
 
 interface OverviewClientProps {
-  initGraphIncome: GraphData[]
-  initGraphExpense: GraphData[]
+  initGraphData: GraphData[]
   initWeeklyIncome: number
   initWeeklyExpense: number
 }
 
-const OverviewClient: React.FC<OverviewClientProps> = ({
-  initGraphIncome,
-  initGraphExpense,
-  initWeeklyIncome,
-  initWeeklyExpense,
-}) => {
+const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeeklyIncome, initWeeklyExpense }) => {
   const [date, setDate] = useState<Date>()
-  const [graphIncome, setGraphIncome] = useState<GraphData[]>(initGraphIncome)
-  const [graphExpense, setGraphExpense] = useState<GraphData[]>(initGraphExpense)
+  const [graphData, setGraphData] = useState<GraphData[]>(initGraphData)
   const [weeklyIncome, setWeeklyIncome] = useState<number>(initWeeklyIncome)
   const [weeklyExpense, setWeeklyExpense] = useState<number>(initWeeklyExpense)
 
   useEffect(() => {
     if (date) {
       axios
-        .get(
-          `/api/transactions/weekly?year=${date.getFullYear()}&month=${date.getMonth()}&day=${date.getDate()}&income=true`
-        )
-        .then((res) => {
-          setGraphIncome(res.data)
-        })
-      axios
         .get(`/api/transactions/weekly?year=${date.getFullYear()}&month=${date.getMonth()}&day=${date.getDate()}`)
         .then((res) => {
-          setGraphExpense(res.data)
+          setGraphData(res.data)
         })
       axios
         .get(
@@ -95,24 +81,10 @@ const OverviewClient: React.FC<OverviewClientProps> = ({
       </div>
       <Card className="col-span-4">
         <CardHeader>
-          <CardTitle>Income</CardTitle>
+          <CardTitle>Overview</CardTitle>
         </CardHeader>
         <CardContent className="pl-2">
-          <Overview
-            data={graphIncome}
-            color="#3498db"
-          />
-        </CardContent>
-      </Card>
-      <Card className="col-span-4">
-        <CardHeader>
-          <CardTitle>Expense</CardTitle>
-        </CardHeader>
-        <CardContent className="pl-2">
-          <Overview
-            data={graphExpense}
-            color="#db3449"
-          />
+          <Overview data={graphData} />
         </CardContent>
       </Card>
     </>

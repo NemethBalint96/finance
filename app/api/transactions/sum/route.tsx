@@ -17,11 +17,11 @@ export async function GET(req: Request) {
     const income = searchParams.get("income")
 
     if (typeof year === "string" && typeof month === "string" && typeof day === "string") {
-      const date = new Date(parseInt(year), parseInt(month), parseInt(day) + 1)
+      const date = new Date(parseInt(year), parseInt(month), parseInt(day))
       const startOfWeek = new Date(date)
       startOfWeek.setDate(date.getDate() - date.getDay())
       const endOfWeek = new Date(startOfWeek)
-      endOfWeek.setDate(startOfWeek.getDate() + 7)
+      endOfWeek.setDate(startOfWeek.getDate() + 6)
 
       const whereClause: WhereClause = {
         userId: userId,
