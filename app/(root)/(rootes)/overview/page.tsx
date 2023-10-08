@@ -9,8 +9,7 @@ const DashboardPage: React.FC = async () => {
   const { userId } = auth()
   if (!userId) return <div>Unauthorized</div>
 
-  const graphIncome = await getGraphTransactionsForThisWeek(userId)
-  const graphExpense = await getGraphTransactionsForThisWeek(userId, false)
+  const graphData = await getGraphTransactionsForThisWeek(userId)
   const weeklyIncome = await getWeeklySum(userId)
   const weeklyExpense = await getWeeklySum(userId, false)
 
@@ -27,8 +26,7 @@ const DashboardPage: React.FC = async () => {
           description=""
         />
         <OverviewClient
-          initGraphIncome={graphIncome}
-          initGraphExpense={graphExpense}
+          initGraphData={graphData}
           initWeeklyIncome={weeklyIncome}
           initWeeklyExpense={weeklyExpense}
         />
