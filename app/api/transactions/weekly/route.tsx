@@ -12,12 +12,10 @@ export async function GET(req: Request) {
       return new NextResponse("Unathenticated", { status: 401 })
     }
     const { searchParams } = new URL(req.url)
-    const year = searchParams.get("year")
-    const month = searchParams.get("month")
-    const day = searchParams.get("day")
+    const isoString = searchParams.get("dateISO")
 
-    if (typeof year === "string" && typeof month === "string" && typeof day === "string") {
-      const date = new Date(parseInt(year), parseInt(month), parseInt(day))
+    if (isoString) {
+      const date = new Date(isoString)
       const startOfWeek = new Date(date)
       startOfWeek.setDate(date.getDate() - date.getDay())
       const endOfWeek = new Date(startOfWeek)

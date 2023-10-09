@@ -1,8 +1,7 @@
 import { Heading } from "@/components/ui/heading"
 import { auth } from "@clerk/nextjs"
-import { getWeeklySum } from "@/actions/get-weekly-sum"
 import { Separator } from "@/components/ui/separator"
-import { getGraphTransactionsForThisWeek } from "@/actions/get-graph-transactions"
+import { getGraphTransactionsForThisWeek, getSumFromGraphData } from "@/actions/get-graph-transactions"
 import OverviewClient from "./components/client"
 
 const DashboardPage: React.FC = async () => {
@@ -10,8 +9,8 @@ const DashboardPage: React.FC = async () => {
   if (!userId) return <div>Unauthorized</div>
 
   const graphData = await getGraphTransactionsForThisWeek(userId)
-  const weeklyIncome = await getWeeklySum(userId)
-  const weeklyExpense = await getWeeklySum(userId, false)
+  const weeklyIncome = getSumFromGraphData(graphData)
+  const weeklyExpense = getSumFromGraphData(graphData, false)
 
   return (
     <div className="flex-col">

@@ -17,6 +17,10 @@ export const templateGraphData: GraphData[] = [
   { name: "Sat", income: 0, expense: 0 },
 ]
 
+export const getSumFromGraphData = (graphData: GraphData[], income = true) => {
+  return graphData.reduce((sum: number, data: GraphData) => sum + (income ? data.income : data.expense), 0)
+}
+
 export const getWeeklyGraphDataFromTransactions = (transactions: Transaction[]) => {
   const weeklyTransactions: { [key: number]: { income: number; expense: number } } = {}
 

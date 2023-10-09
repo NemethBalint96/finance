@@ -4,7 +4,7 @@ import { Equal, TrendingDown, TrendingUp } from "lucide-react"
 import { formatter } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Overview from "@/components/overview"
-import { GraphData } from "@/actions/get-graph-transactions"
+import { GraphData, getSumFromGraphData } from "@/actions/get-graph-transactions"
 import { DatePicker } from "@/components/ui/date-picker"
 import React, { useEffect, useState } from "react"
 import axios from "axios"
@@ -23,25 +23,14 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
 
   useEffect(() => {
     if (date) {
-      axios
-        .get(`/api/transactions/weekly?year=${date.getFullYear()}&month=${date.getMonth()}&day=${date.getDate()}`)
-        .then((res) => {
-          setGraphData(res.data)
-        })
-      axios
-        .get(
-          `/api/transactions/sum?year=${date.getFullYear()}&month=${date.getMonth()}&day=${date.getDate()}&income=true`
-        )
-        .then((res) => {
-          setWeeklyIncome(res.data)
-        })
-      axios
-        .get(`/api/transactions/sum?year=${date.getFullYear()}&month=${date.getMonth()}&day=${date.getDate()}`)
-        .then((res) => {
-          setWeeklyExpense(res.data)
-        })
+      axios.get(`/api/transactions/weekly?dateISO=${date.toISOString()}`).then((res) => {
+        setGraphData(res.data)
+        const incomes = getSumFromGraphData(res.data)
+        const expenses = getSumFromGraphData(res.data, false)
+        setWeeklyIncome(incomes)
+        setWeeklyExpense(expenses)
+      })
     }
-    console.log(date)
   }, [date])
 
   return (
