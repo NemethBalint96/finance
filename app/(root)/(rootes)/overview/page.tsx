@@ -20,10 +20,6 @@ const DashboardPage: React.FC = async () => {
           description="Overview of your finance"
         />
         <Separator />
-        <Heading
-          title="This Week"
-          description=""
-        />
         <OverviewClient
           initGraphData={graphData}
           initWeeklyIncome={weeklyIncome}

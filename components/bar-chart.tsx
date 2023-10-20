@@ -4,11 +4,11 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, ReferenceLin
 import { formatter } from "@/lib/utils"
 import { GraphData } from "@/actions/get-graph-transactions"
 
-interface OverviewProps {
+interface ChartProps {
   data: GraphData[]
 }
 
-const Overview: React.FC<OverviewProps> = ({ data }) => {
+const PosNegBarChart: React.FC<ChartProps> = ({ data }) => {
   return (
     <ResponsiveContainer
       width="100%"
@@ -54,4 +54,4 @@ const Overview: React.FC<OverviewProps> = ({ data }) => {
   )
 }
 
-export default Overview
+export default PosNegBarChart
