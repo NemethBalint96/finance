@@ -1,11 +1,6 @@
 import React, { useCallback, useState } from "react"
 import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts"
 
-const data = [
-  { name: "Income", value: 36200 },
-  { name: "Expense", value: 9295 },
-]
-
 const renderActiveShape = (props: any) => {
   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props
 
@@ -52,7 +47,17 @@ const renderActiveShape = (props: any) => {
   )
 }
 
-const CustomActiveShapePieChart = () => {
+interface CustomActiveShapePieChartProps {
+  income: number
+  expense: number
+}
+
+const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ income, expense }) => {
+  const data = [
+    { name: "Income", value: income },
+    { name: "Expense", value: Math.abs(expense) },
+  ]
+
   const [activeIndex, setActiveIndex] = useState(0)
   const onPieEnter = useCallback(
     (_: any, index: any) => {
@@ -60,7 +65,6 @@ const CustomActiveShapePieChart = () => {
     },
     [setActiveIndex]
   )
-  const COLORS = ["#3498db", "#db3449"]
 
   return (
     <ResponsiveContainer
@@ -80,12 +84,8 @@ const CustomActiveShapePieChart = () => {
           dataKey="value"
           onMouseEnter={onPieEnter}
         >
-          {data.map((entry, index: number) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={COLORS[index % COLORS.length]}
-            />
-          ))}
+          <Cell fill="#3498db" />
+          <Cell fill="#db3449" />
         </Pie>
       </PieChart>
     </ResponsiveContainer>

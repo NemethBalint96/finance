@@ -26,15 +26,22 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
 
   useEffect(() => {
     if (date) {
-      axios.get(`/api/transactions/weekly?dateISO=${date.toISOString()}`).then((res) => {
-        setGraphData(res.data)
-        const incomes = getSumFromGraphData(res.data)
-        const expenses = getSumFromGraphData(res.data, false)
-        setIncome(incomes)
-        setExpense(expenses)
-      })
+      if (isMonthView) {
+        axios.get(`/api/transactions/monthly?dateISO=${date.toISOString()}`).then((res) => {
+          setIncome(res.data.income)
+          setExpense(res.data.expense)
+        })
+      } else {
+        axios.get(`/api/transactions/weekly?dateISO=${date.toISOString()}`).then((res) => {
+          setGraphData(res.data)
+          const incomes = getSumFromGraphData(res.data)
+          const expenses = getSumFromGraphData(res.data, false)
+          setIncome(incomes)
+          setExpense(expenses)
+        })
+      }
     }
-  }, [date])
+  }, [date, isMonthView])
 
   const handleSelect = (e: string) => {
     setIsMonthView(e === "month")
@@ -98,7 +105,14 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
           <CardTitle>Overview</CardTitle>
         </CardHeader>
         <CardContent className="pl-2">
-          {isMonthView ? <CustomActiveShapePieChart /> : <PosNegBarChart data={graphData} />}
+          {isMonthView ? (
+            <CustomActiveShapePieChart
+              income={income}
+              expense={expense}
+            />
+          ) : (
+            <PosNegBarChart data={graphData} />
+          )}
         </CardContent>
       </Card>
     </>

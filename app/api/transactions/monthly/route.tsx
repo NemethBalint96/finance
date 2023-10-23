@@ -1,7 +1,7 @@
-import { getWeeklyGraphDataFromTransactions } from "@/actions/get-graph-transactions"
 import { WhereClause } from "@/actions/get-weekly-transactions"
 import prismadb from "@/lib/prismadb"
 import { auth } from "@clerk/nextjs"
+import { Transaction } from "@prisma/client"
 import { NextResponse } from "next/server"
 
 export async function GET(req: Request) {
@@ -17,22 +17,29 @@ export async function GET(req: Request) {
     if (isoString) {
       const date = new Date(isoString)
       const startOfMonth = new Date(date)
-      startOfMonth.setDate(0)
-      const endOfWeek = new Date(startOfMonth)
-      endOfWeek.setDate(startOfMonth.getDate() + 6)
+      startOfMonth.setDate(1)
+      const endOfMonth = new Date(startOfMonth)
+      endOfMonth.setMonth(startOfMonth.getMonth() + 1)
 
       const whereClause: WhereClause = {
         userId: userId,
-        createdAt: { gte: startOfMonth, lte: endOfWeek },
+        createdAt: { gte: startOfMonth, lte: endOfMonth },
       }
 
       const transactions = await prismadb.transaction.findMany({
         where: whereClause,
       })
 
-      const graphData = getWeeklyGraphDataFromTransactions(transactions)
+      const income = transactions.reduce(
+        (sum: number, transaction: Transaction) => sum + (transaction.price > 0 ? transaction.price : 0),
+        0
+      )
+      const expense = transactions.reduce(
+        (sum: number, transaction: Transaction) => sum + (transaction.price < 0 ? transaction.price : 0),
+        0
+      )
 
-      return NextResponse.json(graphData)
+      return NextResponse.json({ income: income, expense: expense })
     }
 
     return new NextResponse("Incorrect params", { status: 400 })
