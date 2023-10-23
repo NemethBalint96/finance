@@ -7,15 +7,17 @@ export interface GraphData {
   expense: number
 }
 
-export const templateGraphData: GraphData[] = [
-  { name: "Sun", income: 0, expense: 0 },
-  { name: "Mon", income: 0, expense: 0 },
-  { name: "Thu", income: 0, expense: 0 },
-  { name: "Wed", income: 0, expense: 0 },
-  { name: "Tue", income: 0, expense: 0 },
-  { name: "Fri", income: 0, expense: 0 },
-  { name: "Sat", income: 0, expense: 0 },
-]
+export function templateGraphData(): GraphData[] {
+  return [
+    { name: "Sun", income: 0, expense: 0 },
+    { name: "Mon", income: 0, expense: 0 },
+    { name: "Thu", income: 0, expense: 0 },
+    { name: "Wed", income: 0, expense: 0 },
+    { name: "Tue", income: 0, expense: 0 },
+    { name: "Fri", income: 0, expense: 0 },
+    { name: "Sat", income: 0, expense: 0 },
+  ]
+}
 
 export const getSumFromGraphData = (graphData: GraphData[], income = true) => {
   return graphData.reduce((sum: number, data: GraphData) => sum + (income ? data.income : data.expense), 0)
@@ -38,7 +40,7 @@ export const getWeeklyGraphDataFromTransactions = (transactions: Transaction[]) 
     }
   }
 
-  const graphData: GraphData[] = templateGraphData
+  const graphData: GraphData[] = templateGraphData()
 
   for (const day in weeklyTransactions) {
     graphData[parseInt(day)].income = weeklyTransactions[parseInt(day)].income
