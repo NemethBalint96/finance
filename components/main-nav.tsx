@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
-import { ArrowDownCircle, ArrowUpCircle, BarChart4, Home } from "lucide-react"
+import { ArrowDownCircle, ArrowUpCircle, BarChart4, Home, LayoutGrid } from "lucide-react"
 
 export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname()
@@ -28,6 +28,11 @@ export function MainNav({ className, ...props }: React.HTMLAttributes<HTMLElemen
       href: "/overview",
       label: <BarChart4 />,
       active: pathname === "/overview",
+    },
+    {
+      href: "/category",
+      label: <LayoutGrid />,
+      active: pathname === "/category",
     },
   ]
 
