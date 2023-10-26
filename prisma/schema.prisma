@@ -150,21 +150,21 @@ model Service {
 }
 
 model Transaction {
-  id         String                @id @default(uuid())
+  id         String               @id @default(uuid())
   userId     String
   name       String
   price      Int
-  categories TransactionCategory[]
-  createdAt  DateTime              @default(now())
+  categoryId String?
+  category   TransactionCategory? @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime             @default(now())
+
+  @@index([categoryId])
 }
 
 model TransactionCategory {
-  id            String      @id @default(uuid())
-  userId        String
-  name          String
-  transactionId String
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
-  createdAt     DateTime    @default(now())
-
-  @@index([transactionId])
+  id           String        @id @default(uuid())
+  userId       String
+  name         String
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
 }
