@@ -45,7 +45,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
     try {
       setLoading(true)
       if (initialData) {
-        await axios.patch(`/api/categories/${params.expenseId}`, data)
+        await axios.patch(`/api/categories/${params.categoryId}`, data)
       } else {
         await axios.post("/api/categories", data)
       }
