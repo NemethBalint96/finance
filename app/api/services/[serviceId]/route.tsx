@@ -52,7 +52,7 @@ export async function PATCH(req: Request, { params }: { params: { serviceId: str
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { storeId: string; serviceId: string } }) {
+export async function DELETE(req: Request, { params }: { params: { serviceId: string } }) {
   try {
     if (!params.serviceId) {
       return new NextResponse("Service id is required", { status: 400 })

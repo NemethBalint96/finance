@@ -13,12 +13,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ServiceColumn } from "./columns"
+import { CategoryColumn } from "./columns"
 import { Button } from "@/components/ui/button"
 import { AlertModal } from "@/components/modals/alert-modal"
 
 interface CellActionProps {
-  data: ServiceColumn
+  data: CategoryColumn
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -30,9 +30,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true)
-      await axios.delete(`/api/services/${data.id}`)
+      await axios.delete(`/api/categories/${data.id}`)
       router.refresh()
-      toast.success("Service deleted.")
+      toast.success("Category deleted.")
     } catch (error) {
       toast.error("Something bad happened.")
     } finally {
@@ -62,7 +62,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => router.push(`/${data.id}`)}>
+          <DropdownMenuItem onClick={() => router.push(`/category/${data.id}`)}>
             <Edit className="mr-2 h-4 w-4" />
             Update
           </DropdownMenuItem>

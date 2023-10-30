@@ -25,14 +25,16 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
   const [isMonthView, setIsMonthView] = useState(false)
 
   useEffect(() => {
-    if (date) {
+    if (date || isMonthView) {
+      const isoString = date ? date.toISOString() : new Date().toISOString()
+
       if (isMonthView) {
-        axios.get(`/api/transactions/monthly?dateISO=${date.toISOString()}`).then((res) => {
+        axios.get(`/api/transactions/monthly?dateISO=${isoString}`).then((res) => {
           setIncome(res.data.income)
           setExpense(res.data.expense)
         })
       } else {
-        axios.get(`/api/transactions/weekly?dateISO=${date.toISOString()}`).then((res) => {
+        axios.get(`/api/transactions/weekly?dateISO=${isoString}`).then((res) => {
           setGraphData(res.data)
           const incomes = getSumFromGraphData(res.data)
           const expenses = getSumFromGraphData(res.data, false)

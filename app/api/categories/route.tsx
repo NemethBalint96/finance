@@ -11,21 +11,17 @@ export async function POST(req: Request) {
       return new NextResponse("Unathenticated", { status: 401 })
     }
 
-    const { name, price, categoryId } = body
+    const { name } = body
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 })
     }
 
-    if (!price) {
-      return new NextResponse("Price is required", { status: 400 })
-    }
+    const category = await prismadb.transactionCategory.create({ data: { name, userId: userId } })
 
-    const transaction = await prismadb.transaction.create({ data: { name, price, userId, categoryId } })
-
-    return NextResponse.json(transaction)
+    return NextResponse.json(category)
   } catch (error) {
-    console.log("[TRANSACTION_POST]", error)
+    console.log("[CATEGORY_POST]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }
@@ -38,11 +34,11 @@ export async function GET() {
       return new NextResponse("Unathenticated", { status: 401 })
     }
 
-    const transaction = await prismadb.transaction.findMany({ where: { userId: userId } })
+    const caregories = await prismadb.transactionCategory.findMany({ where: { userId: userId } })
 
-    return NextResponse.json(transaction)
+    return NextResponse.json(caregories)
   } catch (error) {
-    console.log("[TRANSACTION_GET]", error)
+    console.log("[CATEGORIES_GET]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }
