@@ -5,7 +5,7 @@ import axios from "axios"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { Trash2 } from "lucide-react"
-import { Transaction } from "@prisma/client"
+import { Transaction, TransactionCategory } from "@prisma/client"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useParams, useRouter } from "next/navigation"
@@ -15,16 +15,22 @@ import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 import { AlertModal } from "@/components/modals/alert-modal"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface ExpenseFormProps {
   initialData: Transaction | null
+  categories: TransactionCategory[]
 }
 
-const formSchema = z.object({ name: z.string().min(1), price: z.coerce.number().min(1) })
+const formSchema = z.object({
+  name: z.string().min(1),
+  price: z.coerce.number().min(1),
+  categoryId: z.string().optional(),
+})
 
 type ExpenseFormValues = z.infer<typeof formSchema>
 
-export const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
+export const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData, categories }) => {
   const params = useParams()
   const router = useRouter()
 
@@ -42,7 +48,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
 
   const form = useForm<ExpenseFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || { name: "", price: 1 },
+    defaultValues: { ...initialData, categoryId: initialData?.categoryId ? initialData.categoryId : "" } || {
+      name: "",
+      price: 1,
+      categoryId: "",
+    },
   })
 
   const onSubmit = async (data: ExpenseFormValues) => {
@@ -119,7 +129,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="service name"
+                      placeholder="expense name"
                       {...field}
                     />
                   </FormControl>
@@ -137,11 +147,45 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData }) => {
                     <Input
                       type="number"
                       disabled={loading}
-                      placeholder="1"
+                      placeholder=""
                       {...field}
                     />
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a category"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem
+                          key={category.id}
+                          value={category.id}
+                        >
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormItem>
               )}
             />

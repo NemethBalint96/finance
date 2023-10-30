@@ -30,7 +30,7 @@ export async function PATCH(req: Request, { params }: { params: { transactionId:
     }
 
     const body = await req.json()
-    const { name, price } = body
+    const { name, price, categoryId } = body
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 })
@@ -42,7 +42,7 @@ export async function PATCH(req: Request, { params }: { params: { transactionId:
 
     const transaction = await prismadb.transaction.updateMany({
       where: { id: params.transactionId },
-      data: { name, price },
+      data: { name, price, categoryId },
     })
 
     return NextResponse.json(transaction)
