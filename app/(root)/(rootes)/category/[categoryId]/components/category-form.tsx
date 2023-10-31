@@ -20,7 +20,7 @@ interface CategoryFormProps {
   initialData: TransactionCategory | null
 }
 
-const formSchema = z.object({ name: z.string().min(1) })
+const formSchema = z.object({ name: z.string().min(1), color: z.string().optional() })
 
 type CategoryFormValues = z.infer<typeof formSchema>
 
@@ -38,7 +38,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
 
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || { name: "" },
+    defaultValues: { ...initialData, color: initialData?.color ? initialData.color : "" } || { name: "", color: "" },
   })
 
   const onSubmit = async (data: CategoryFormValues) => {
@@ -62,9 +62,9 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true)
-      await axios.delete(`/api/categories/${params.serviceId}`)
+      await axios.delete(`/api/categories/${params.categoryId}`)
       router.refresh()
-      router.push("/")
+      router.push("/category")
       toast.success("Category deleted.")
     } catch (error) {
       toast.error("Something went wrong.")
@@ -115,6 +115,24 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({ initialData }) => {
                     <Input
                       disabled={loading}
                       placeholder="category name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="color"
+                      disabled={loading}
+                      placeholder=""
                       {...field}
                     />
                   </FormControl>
