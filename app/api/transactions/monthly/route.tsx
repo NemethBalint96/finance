@@ -1,5 +1,6 @@
 import { WhereClause } from "@/actions/get-weekly-transactions"
 import prismadb from "@/lib/prismadb"
+import { PieChartData } from "@/types"
 import { auth } from "@clerk/nextjs"
 import { Transaction } from "@prisma/client"
 import { NextResponse } from "next/server"
@@ -26,20 +27,45 @@ export async function GET(req: Request) {
         createdAt: { gte: startOfMonth, lte: endOfMonth },
       }
 
-      const transactions = await prismadb.transaction.findMany({
-        where: whereClause,
+      const monthlyExpenseWithCategory = await prismadb.transaction.findMany({
+        where: { ...whereClause, price: { lt: 0 } },
+        include: { category: true },
       })
 
-      const income = transactions.reduce(
-        (sum: number, transaction: Transaction) => sum + (transaction.price > 0 ? transaction.price : 0),
-        0
-      )
-      const expense = transactions.reduce(
-        (sum: number, transaction: Transaction) => sum + (transaction.price < 0 ? transaction.price : 0),
+      const incomes = await prismadb.transaction.findMany({
+        where: { ...whereClause, price: { gt: 0 } },
+      })
+
+      const income = incomes.reduce((sum: number, transaction: Transaction) => sum + transaction.price, 0)
+
+      const expense = monthlyExpenseWithCategory.reduce(
+        (sum: number, transaction: Transaction) => sum + transaction.price,
         0
       )
 
-      return NextResponse.json({ income: income, expense: expense })
+      const groupedTransactions = monthlyExpenseWithCategory.reduce(
+        (result: { [key: string]: PieChartData }, transaction) => {
+          const categoryName = transaction.category?.name || "Uncategorized"
+          const categoryColor = transaction.category?.color || "#db3449"
+
+          if (!result[categoryName]) {
+            result[categoryName] = {
+              name: categoryName,
+              value: 0,
+              color: categoryColor,
+            }
+          }
+
+          result[categoryName].value += Math.abs(transaction.price)
+          return result
+        },
+        {}
+      )
+
+      const groupedTransactionArray: PieChartData[] = Object.values(groupedTransactions)
+      groupedTransactionArray.push({ name: "Income", value: income, color: "#3498db" })
+
+      return NextResponse.json({ income: income, expense: expense, pieChartData: groupedTransactionArray })
     }
 
     return new NextResponse("Incorrect params", { status: 400 })

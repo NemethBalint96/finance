@@ -1,3 +1,4 @@
+import { PieChartData } from "@/types"
 import React, { useCallback, useState } from "react"
 import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts"
 
@@ -48,16 +49,10 @@ const renderActiveShape = (props: any) => {
 }
 
 interface CustomActiveShapePieChartProps {
-  income: number
-  expense: number
+  data: PieChartData[]
 }
 
-const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ income, expense }) => {
-  const data = [
-    { name: "Income", value: income },
-    { name: "Expense", value: Math.abs(expense) },
-  ]
-
+const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ data }) => {
   const [activeIndex, setActiveIndex] = useState(0)
   const onPieEnter = useCallback(
     (_: any, index: any) => {
@@ -84,8 +79,9 @@ const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ i
           dataKey="value"
           onMouseEnter={onPieEnter}
         >
-          <Cell fill="#3498db" />
-          <Cell fill="#db3449" />
+          {data.map((d) => (
+            <Cell fill={d.color} />
+          ))}
         </Pie>
       </PieChart>
     </ResponsiveContainer>
