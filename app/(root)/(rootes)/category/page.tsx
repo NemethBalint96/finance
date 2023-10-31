@@ -11,6 +11,7 @@ const CategoryPage = async () => {
 
   if (userId) {
     categories = await prismadb.transactionCategory.findMany({
+      where: { userId },
       orderBy: { createdAt: "asc" },
     })
   }
