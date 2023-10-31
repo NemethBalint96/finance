@@ -77,9 +77,9 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ initialData, categorie
   const onDelete = async () => {
     try {
       setLoading(true)
-      await axios.delete(`/api/transactions/${params.serviceId}`)
+      await axios.delete(`/api/transactions/${params.expenseId}`)
       router.refresh()
-      router.push("/")
+      router.push("/expense")
       toast.success("Expense deleted.")
     } catch (error) {
       toast.error("Something went wrong.")

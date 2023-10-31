@@ -10,7 +10,6 @@ const ExpensePage = async ({ params }: { params: { expenseId: string } }) => {
     where: { id: params.expenseId },
     include: { category: true },
   })
-  console.log(expense)
 
   const categories = await prismadb.transactionCategory.findMany({ where: { userId: userId } })
 
