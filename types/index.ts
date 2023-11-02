@@ -3,3 +3,9 @@ export interface PieChartData {
   value: number
   color: string
 }
+
+export interface GraphData {
+  name: string
+  income: number
+  expense: number
+}

@@ -1,11 +1,6 @@
 import { Transaction } from "@prisma/client"
 import { getWeeklyTransactions } from "./get-weekly-transactions"
-
-export interface GraphData {
-  name: string
-  income: number
-  expense: number
-}
+import { GraphData } from "@/types"
 
 export function templateGraphData(): GraphData[] {
   return [

@@ -1,6 +1,7 @@
-import { PieChartData } from "@/types"
-import React, { useCallback, useState } from "react"
+import axios from "axios"
+import React, { useCallback, useEffect, useState } from "react"
 import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts"
+import { PieChartData } from "@/types"
 
 const renderActiveShape = (props: any) => {
   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props
@@ -49,10 +50,13 @@ const renderActiveShape = (props: any) => {
 }
 
 interface CustomActiveShapePieChartProps {
-  data: PieChartData[]
+  isoString: String
+  setIncome: React.Dispatch<React.SetStateAction<number>>
+  setExpense: React.Dispatch<React.SetStateAction<number>>
 }
 
-const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ data }) => {
+const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ isoString, setIncome, setExpense }) => {
+  const [pieChartData, setPieChartData] = useState<PieChartData[]>([])
   const [activeIndex, setActiveIndex] = useState(0)
   const onPieEnter = useCallback(
     (_: any, index: any) => {
@@ -60,6 +64,14 @@ const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ d
     },
     [setActiveIndex]
   )
+
+  useEffect(() => {
+    axios.get(`/api/transactions/monthly?dateISO=${isoString}`).then((res) => {
+      setPieChartData(res.data.pieChartData)
+      setIncome(res.data.income)
+      setExpense(res.data.expense)
+    })
+  }, [isoString])
 
   return (
     <ResponsiveContainer
@@ -70,7 +82,7 @@ const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ d
         <Pie
           activeIndex={activeIndex}
           activeShape={renderActiveShape}
-          data={data}
+          data={pieChartData}
           cx="50%"
           cy="50%"
           innerRadius={85}
@@ -79,8 +91,8 @@ const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ d
           dataKey="value"
           onMouseEnter={onPieEnter}
         >
-          {data.map((d) => (
-            <Cell fill={d.color} />
+          {pieChartData.map((data) => (
+            <Cell fill={data.color} />
           ))}
         </Pie>
       </PieChart>
