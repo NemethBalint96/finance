@@ -1,16 +1,14 @@
 "use client"
 
+import React, { useState } from "react"
 import { Equal, TrendingDown, TrendingUp } from "lucide-react"
 import { formatter } from "@/lib/utils"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import PosNegBarChart from "@/components/bar-chart"
-import { GraphData, getSumFromGraphData } from "@/actions/get-graph-transactions"
+import { GraphData } from "@/types"
 import { DatePicker } from "@/components/ui/date-picker"
-import React, { useEffect, useState } from "react"
-import axios from "axios"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import CustomActiveShapePieChart from "@/components/pie-chart"
-import { PieChartData } from "@/types"
+import PosNegBarChart from "./bar-chart"
+import CustomActiveShapePieChart from "./pie-chart"
 
 interface OverviewClientProps {
   initGraphData: GraphData[]
@@ -20,33 +18,10 @@ interface OverviewClientProps {
 
 const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeeklyIncome, initWeeklyExpense }) => {
   const [date, setDate] = useState<Date>()
-  const [graphData, setGraphData] = useState<GraphData[]>(initGraphData)
-  const [pieChartData, setPieChartData] = useState<PieChartData[]>([])
   const [income, setIncome] = useState<number>(initWeeklyIncome)
   const [expense, setExpense] = useState<number>(initWeeklyExpense)
   const [isMonthView, setIsMonthView] = useState(false)
-
-  useEffect(() => {
-    if (date || isMonthView) {
-      const isoString = date ? date.toISOString() : new Date().toISOString()
-
-      if (isMonthView) {
-        axios.get(`/api/transactions/monthly?dateISO=${isoString}`).then((res) => {
-          setPieChartData(res.data.pieChartData)
-          setIncome(res.data.income)
-          setExpense(res.data.expense)
-        })
-      } else {
-        axios.get(`/api/transactions/weekly?dateISO=${isoString}`).then((res) => {
-          setGraphData(res.data)
-          const incomes = getSumFromGraphData(res.data)
-          const expenses = getSumFromGraphData(res.data, false)
-          setIncome(incomes)
-          setExpense(expenses)
-        })
-      }
-    }
-  }, [date, isMonthView])
+  const isoString = date ? date.toISOString() : new Date().toISOString()
 
   const handleSelect = (e: string) => {
     setIsMonthView(e === "month")
@@ -108,7 +83,20 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
           <CardTitle>Overview</CardTitle>
         </CardHeader>
         <CardContent className="pl-2">
-          {isMonthView ? <CustomActiveShapePieChart data={pieChartData} /> : <PosNegBarChart data={graphData} />}
+          {isMonthView ? (
+            <CustomActiveShapePieChart
+              isoString={isoString}
+              setIncome={setIncome}
+              setExpense={setExpense}
+            />
+          ) : (
+            <PosNegBarChart
+              initGraphData={initGraphData}
+              isoString={isoString}
+              setIncome={setIncome}
+              setExpense={setExpense}
+            />
+          )}
         </CardContent>
       </Card>
     </>

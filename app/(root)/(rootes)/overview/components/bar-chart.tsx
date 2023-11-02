@@ -1,21 +1,39 @@
 "use client"
 
+import axios from "axios"
+import { useEffect, useState } from "react"
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, ReferenceLine } from "recharts"
+import { GraphData } from "@/types"
 import { formatter } from "@/lib/utils"
-import { GraphData } from "@/actions/get-graph-transactions"
+import { getSumFromGraphData } from "@/actions/get-graph-transactions"
 
 interface ChartProps {
-  data: GraphData[]
+  initGraphData: GraphData[]
+  isoString: String
+  setIncome: React.Dispatch<React.SetStateAction<number>>
+  setExpense: React.Dispatch<React.SetStateAction<number>>
 }
 
-const PosNegBarChart: React.FC<ChartProps> = ({ data }) => {
+const PosNegBarChart: React.FC<ChartProps> = ({ initGraphData, isoString, setIncome, setExpense }) => {
+  const [graphData, setGraphData] = useState<GraphData[]>(initGraphData)
+
+  useEffect(() => {
+    axios.get(`/api/transactions/weekly?dateISO=${isoString}`).then((res) => {
+      setGraphData(res.data)
+      const incomes = getSumFromGraphData(res.data)
+      const expenses = getSumFromGraphData(res.data, false)
+      setIncome(incomes)
+      setExpense(expenses)
+    })
+  }, [isoString])
+
   return (
     <ResponsiveContainer
       width="100%"
       height={350}
     >
       <BarChart
-        data={data}
+        data={graphData}
         stackOffset="sign"
       >
         <XAxis
