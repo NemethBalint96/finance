@@ -30,7 +30,7 @@ export async function PATCH(req: Request, { params }: { params: { serviceId: str
     }
 
     const body = await req.json()
-    const { name, price } = body
+    const { name, price, color } = body
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 })
@@ -44,6 +44,17 @@ export async function PATCH(req: Request, { params }: { params: { serviceId: str
       where: { id: params.serviceId },
       data: { name, price },
     })
+
+    const category = await prismadb.transactionCategory.updateMany({
+      where: { serviceId: params.serviceId },
+      data: { name, color },
+    })
+
+    if (category.count === 0) {
+      const category = await prismadb.transactionCategory.create({
+        data: { name, color, userId, serviceId: params.serviceId },
+      })
+    }
 
     return NextResponse.json(service)
   } catch (error) {

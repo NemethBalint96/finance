@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return new NextResponse("Unathenticated", { status: 401 })
     }
 
-    const { name, price } = body
+    const { name, price, color } = body
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 })
@@ -21,7 +21,9 @@ export async function POST(req: Request) {
       return new NextResponse("Price is required", { status: 400 })
     }
 
-    const service = await prismadb.service.create({ data: { name, price, userId: userId } })
+    const service = await prismadb.service.create({ data: { name, price, userId } })
+
+    const category = await prismadb.transactionCategory.create({ data: { name, color, userId, serviceId: service.id } })
 
     return NextResponse.json(service)
   } catch (error) {
