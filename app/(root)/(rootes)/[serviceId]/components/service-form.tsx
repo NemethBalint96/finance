@@ -5,7 +5,6 @@ import axios from "axios"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { Trash2 } from "lucide-react"
-import { Service } from "@prisma/client"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useParams, useRouter } from "next/navigation"
@@ -17,10 +16,10 @@ import { AlertModal } from "@/components/modals/alert-modal"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 
 interface ServiceFormProps {
-  initialData: Service | null
+  initialData: ServiceFormValues | null
 }
 
-const formSchema = z.object({ name: z.string().min(1), price: z.coerce.number().min(1) })
+const formSchema = z.object({ name: z.string().min(1), price: z.coerce.number().min(1), color: z.string().optional() })
 
 type ServiceFormValues = z.infer<typeof formSchema>
 
@@ -38,7 +37,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ initialData }) => {
 
   const form = useForm<ServiceFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: initialData || { name: "", price: 1 },
+    defaultValues: initialData || { name: "", price: 1, color: undefined },
   })
 
   const onSubmit = async (data: ServiceFormValues) => {
@@ -133,6 +132,24 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ initialData }) => {
                       type="number"
                       disabled={loading}
                       placeholder="1"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="color"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="color"
+                      disabled={loading}
+                      placeholder=""
                       {...field}
                     />
                   </FormControl>
