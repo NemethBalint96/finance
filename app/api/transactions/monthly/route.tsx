@@ -27,8 +27,8 @@ export async function GET(req: Request) {
         createdAt: { gte: startOfMonth, lte: endOfMonth },
       }
 
-      const monthlyExpenseWithCategory = await prismadb.transaction.findMany({
-        where: { ...whereClause, price: { lt: 0 } },
+      const monthlytransactionsWithCategory = await prismadb.transaction.findMany({
+        where: whereClause,
         include: { category: true },
       })
 
@@ -36,17 +36,18 @@ export async function GET(req: Request) {
         where: { ...whereClause, price: { gt: 0 } },
       })
 
+      const expenses = await prismadb.transaction.findMany({
+        where: { ...whereClause, price: { lt: 0 } },
+      })
+
       const income = incomes.reduce((sum: number, transaction: Transaction) => sum + transaction.price, 0)
 
-      const expense = monthlyExpenseWithCategory.reduce(
-        (sum: number, transaction: Transaction) => sum + transaction.price,
-        0
-      )
+      const expense = expenses.reduce((sum: number, transaction: Transaction) => sum + transaction.price, 0)
 
-      const groupedTransactions = monthlyExpenseWithCategory.reduce(
+      const groupedTransactions = monthlytransactionsWithCategory.reduce(
         (result: { [key: string]: PieChartData }, transaction) => {
-          const categoryName = transaction.category?.name || "Uncategorized"
-          const categoryColor = transaction.category?.color || "#db3449"
+          const categoryName = transaction.category?.name || (transaction.price > 0 ? "Income" : "Expense")
+          const categoryColor = transaction.category?.color || (transaction.price > 0 ? "#3498db" : "#db3449")
 
           if (!result[categoryName]) {
             result[categoryName] = {
@@ -63,7 +64,6 @@ export async function GET(req: Request) {
       )
 
       const groupedTransactionArray: PieChartData[] = Object.values(groupedTransactions)
-      groupedTransactionArray.push({ name: "Income", value: income, color: "#3498db" })
 
       return NextResponse.json({ income: income, expense: expense, pieChartData: groupedTransactionArray })
     }
