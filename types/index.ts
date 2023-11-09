@@ -9,3 +9,5 @@ export interface GraphData {
   income: number
   expense: number
 }
+
+export type View = "Income" | "Expense" | "Sum"
