@@ -51,7 +51,12 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
         </Select>
       </div>
       <div className="grid gap-4 grid-cols-2">
-        <Card onClick={() => setView("Income")}>
+        <Card
+          onClick={() => setView("Income")}
+          className={`${isMonthView ? "hover:cursor-pointer" : ""} ${
+            isMonthView && view === "Income" ? "border-primary" : ""
+          }`}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Income</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -60,7 +65,12 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
             <div className="text-2xl font-bold">{formatter.format(income)}</div>
           </CardContent>
         </Card>
-        <Card onClick={() => setView("Expense")}>
+        <Card
+          onClick={() => setView("Expense")}
+          className={`${isMonthView ? "hover:cursor-pointer" : ""} ${
+            isMonthView && view === "Expense" ? "border-primary" : ""
+          }`}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Expense</CardTitle>
             <TrendingDown className="h-4 w-4 text-muted-foreground" />
@@ -71,7 +81,9 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
         </Card>
         <Card
           onClick={() => setView("Sum")}
-          className="col-span-2"
+          className={`col-span-2 ${isMonthView ? "hover:cursor-pointer" : ""} ${
+            isMonthView && view === "Sum" ? "border-primary" : ""
+          }`}
         >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Sum</CardTitle>
