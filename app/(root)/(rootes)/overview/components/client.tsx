@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import { Equal, TrendingDown, TrendingUp } from "lucide-react"
 import { formatter } from "@/lib/utils"
-import { GraphData } from "@/types"
+import { GraphData, View } from "@/types"
 import { DatePicker } from "@/components/ui/date-picker"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -21,6 +21,7 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
   const [income, setIncome] = useState<number>(initWeeklyIncome)
   const [expense, setExpense] = useState<number>(initWeeklyExpense)
   const [isMonthView, setIsMonthView] = useState(false)
+  const [view, setView] = useState<View>("Sum")
   const isoString = date ? date.toISOString() : new Date().toISOString()
 
   const handleSelect = (e: string) => {
@@ -50,7 +51,12 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
         </Select>
       </div>
       <div className="grid gap-4 grid-cols-2">
-        <Card>
+        <Card
+          onClick={() => setView("Income")}
+          className={`${isMonthView ? "hover:cursor-pointer" : ""} ${
+            isMonthView && view === "Income" ? "border-primary" : ""
+          }`}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Income</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -59,7 +65,12 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
             <div className="text-2xl font-bold">{formatter.format(income)}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card
+          onClick={() => setView("Expense")}
+          className={`${isMonthView ? "hover:cursor-pointer" : ""} ${
+            isMonthView && view === "Expense" ? "border-primary" : ""
+          }`}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Expense</CardTitle>
             <TrendingDown className="h-4 w-4 text-muted-foreground" />
@@ -68,7 +79,12 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
             <div className="text-2xl font-bold">{formatter.format(expense)}</div>
           </CardContent>
         </Card>
-        <Card className="col-span-2">
+        <Card
+          onClick={() => setView("Sum")}
+          className={`col-span-2 ${isMonthView ? "hover:cursor-pointer" : ""} ${
+            isMonthView && view === "Sum" ? "border-primary" : ""
+          }`}
+        >
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Sum</CardTitle>
             <Equal className="h-4 w-4 text-muted-foreground" />
@@ -88,6 +104,7 @@ const OverviewClient: React.FC<OverviewClientProps> = ({ initGraphData, initWeek
               isoString={isoString}
               setIncome={setIncome}
               setExpense={setExpense}
+              view={view}
             />
           ) : (
             <PosNegBarChart

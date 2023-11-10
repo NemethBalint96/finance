@@ -1,7 +1,7 @@
 import axios from "axios"
 import React, { useCallback, useEffect, useState } from "react"
 import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts"
-import { PieChartData } from "@/types"
+import { PieChartData, View } from "@/types"
 
 const renderActiveShape = (props: any) => {
   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props
@@ -53,9 +53,15 @@ interface CustomActiveShapePieChartProps {
   isoString: String
   setIncome: React.Dispatch<React.SetStateAction<number>>
   setExpense: React.Dispatch<React.SetStateAction<number>>
+  view: View
 }
 
-const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ isoString, setIncome, setExpense }) => {
+const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({
+  isoString,
+  setIncome,
+  setExpense,
+  view,
+}) => {
   const [pieChartData, setPieChartData] = useState<PieChartData[]>([])
   const [activeIndex, setActiveIndex] = useState(0)
   const onPieEnter = useCallback(
@@ -66,7 +72,7 @@ const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({ i
   )
 
   useEffect(() => {
-    axios.get(`/api/transactions/monthly?dateISO=${isoString}`).then((res) => {
+    axios.get(`/api/transactions/monthly?dateISO=${isoString}&view=${view}`).then((res) => {
       setPieChartData(res.data.pieChartData)
       setIncome(res.data.income)
       setExpense(res.data.expense)
