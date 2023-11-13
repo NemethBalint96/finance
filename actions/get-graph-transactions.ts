@@ -1,16 +1,18 @@
 import { Transaction } from "@prisma/client"
-import { getWeeklyTransactions } from "./get-weekly-transactions"
 import { GraphData } from "@/types"
+import { getWeeklyTransactions } from "./get-weekly-transactions"
+
+const initValue = { income: 0, expense: 0 }
 
 export function templateGraphData(): GraphData[] {
   return [
-    { name: "Sun", income: 0, expense: 0 },
-    { name: "Mon", income: 0, expense: 0 },
-    { name: "Thu", income: 0, expense: 0 },
-    { name: "Wed", income: 0, expense: 0 },
-    { name: "Tue", income: 0, expense: 0 },
-    { name: "Fri", income: 0, expense: 0 },
-    { name: "Sat", income: 0, expense: 0 },
+    { name: "Sun", ...initValue },
+    { name: "Mon", ...initValue },
+    { name: "Thu", ...initValue },
+    { name: "Wed", ...initValue },
+    { name: "Tue", ...initValue },
+    { name: "Fri", ...initValue },
+    { name: "Sat", ...initValue },
   ]
 }
 
