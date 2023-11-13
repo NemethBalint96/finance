@@ -1,18 +1,15 @@
-import { CategoryColumn } from "@/app/(root)/(rootes)/category/components/columns"
-import { ServiceColumn } from "@/app/(root)/(rootes)/components/columns"
-
 interface ColorCellProp {
-  data: ServiceColumn | CategoryColumn
+  color?: string | null
 }
 
-const ColorCell = ({ data }: ColorCellProp) => {
+const ColorCell = ({ color }: ColorCellProp) => {
   return (
     <div className="flex items-center gap-x-2">
-      {data.color}
       <div
         className="h-6 w-6 rounded-full border"
-        style={{ backgroundColor: data.color || undefined }}
+        style={{ backgroundColor: color || undefined }}
       />
+      {color}
     </div>
   )
 }
