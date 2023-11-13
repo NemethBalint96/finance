@@ -1,5 +1,5 @@
-import { TodayIncomeColumn } from "@/app/(root)/(rootes)/income/components/columns"
 import prismadb from "@/lib/prismadb"
+import { TodayIncomeColumn } from "@/app/(root)/income/components/columns"
 
 export const getTodayIncome = async (userId: string) => {
   const today = new Date()
@@ -15,7 +15,7 @@ export const getTodayIncome = async (userId: string) => {
   const formattedTodayIncome: TodayIncomeColumn[] = dailyIncome.map((item) => ({
     name: item.name,
     count: item._count.name,
-    sum: item._sum.price !== null ? item._sum.price : 0,
+    sum: item._sum.price ? item._sum.price : 0,
   }))
 
   return formattedTodayIncome

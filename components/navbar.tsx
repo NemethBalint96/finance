@@ -1,14 +1,11 @@
+import { redirect } from "next/navigation"
 import { UserButton, auth } from "@clerk/nextjs"
 import { MainNav } from "@/components/main-nav"
-import { redirect } from "next/navigation"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const Navbar = async () => {
   const { userId } = auth()
-
-  if (!userId) {
-    redirect("/sign-in")
-  }
+  if (!userId) redirect("/sign-in")
 
   return (
     <div className="border-b">

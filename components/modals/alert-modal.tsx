@@ -11,7 +11,7 @@ interface AlertModalProps {
   loading: boolean
 }
 
-export const AlertModal: React.FC<AlertModalProps> = ({ isOpen, onClose, onConfirm, loading }) => {
+export const AlertModal = ({ isOpen, onClose, onConfirm, loading }: AlertModalProps) => {
   const [isMounted, setIsMounted] = useState(false)
 
   useEffect(() => {
