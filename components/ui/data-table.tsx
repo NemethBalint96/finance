@@ -22,7 +22,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-export function DataTable<TData extends HasId, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const router = useRouter()
   const pathname = usePathname()
@@ -38,8 +38,9 @@ export function DataTable<TData extends HasId, TValue>({ columns, data }: DataTa
     },
   })
 
-  const handleRowClick = (id: string) => {
-    if (id === null || id === undefined) return
+  const handleRowClick = (data: TData) => {
+    const { id } = data as TData extends HasId ? TData : never
+    if (!id) return
     if (pathname === "/income") return
     const newPathName = `${pathname}${pathname === "/" ? "" : "/"}${id}`
     router.push(newPathName)
@@ -68,7 +69,7 @@ export function DataTable<TData extends HasId, TValue>({ columns, data }: DataTa
                 className={pathname !== "/income" ? "hover:cursor-pointer" : ""}
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                onClick={() => handleRowClick(row.original.id)}
+                onClick={() => handleRowClick(row.original)}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
