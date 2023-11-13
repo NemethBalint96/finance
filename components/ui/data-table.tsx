@@ -9,17 +9,19 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import { usePathname, useRouter } from "next/navigation"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  searchKey?: string
 }
 
-export function DataTable<TData, TValue>({ columns, data, searchKey }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const router = useRouter()
+  const pathname = usePathname()
 
   const table = useReactTable({
     data,
@@ -31,6 +33,13 @@ export function DataTable<TData, TValue>({ columns, data, searchKey }: DataTable
       sorting,
     },
   })
+
+  const handleRowClick = (id: string) => {
+    if (id === null || id === undefined) return
+    if (pathname === "/income") return
+    const newPathName = `${pathname}${pathname === "/" ? "" : "/"}${id}`
+    router.push(newPathName)
+  }
 
   return (
     <div className="rounded-md border">
@@ -52,8 +61,10 @@ export function DataTable<TData, TValue>({ columns, data, searchKey }: DataTable
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
+                className={pathname !== "/income" ? "hover:cursor-pointer" : ""}
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
+                onClick={() => handleRowClick(row.original.id)}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
