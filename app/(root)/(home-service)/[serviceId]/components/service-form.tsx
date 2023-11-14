@@ -102,7 +102,7 @@ const ServiceForm = ({ initialData }: ServiceFormProps) => {
           className="space-y-8 w-full"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <div className="grid grid-cols-2 gap-8">
+          <div className="space-y-8">
             <FormField
               control={form.control}
               name="name"
@@ -159,7 +159,7 @@ const ServiceForm = ({ initialData }: ServiceFormProps) => {
           </div>
           <Button
             type="submit"
-            className="ml-auto"
+            className="w-full"
             disabled={loading}
           >
             {action}
