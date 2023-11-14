@@ -5,8 +5,8 @@ import axios from "axios"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Heading } from "@/components/ui/heading"
@@ -64,7 +64,7 @@ const IncomeForm = ({ categories }: IncomeFormProps) => {
           className="space-y-8 w-full"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <div className="grid grid-cols-2 gap-8">
+          <div className="space-y-8">
             <FormField
               control={form.control}
               name="name"
@@ -137,7 +137,7 @@ const IncomeForm = ({ categories }: IncomeFormProps) => {
           </div>
           <Button
             type="submit"
-            className="ml-auto"
+            className="w-full"
             disabled={loading}
           >
             Create

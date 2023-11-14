@@ -103,7 +103,7 @@ const CategoryForm = ({ initialData }: CategoryFormProps) => {
           className="space-y-8 w-full"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <div className="grid grid-cols-2 gap-8">
+          <div className="space-y-8">
             <FormField
               control={form.control}
               name="name"
@@ -142,7 +142,7 @@ const CategoryForm = ({ initialData }: CategoryFormProps) => {
           </div>
           <Button
             type="submit"
-            className="ml-auto"
+            className="w-full"
             disabled={loading}
           >
             {action}
