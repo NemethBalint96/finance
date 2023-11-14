@@ -10,4 +10,4 @@ export interface GraphData {
   expense: number
 }
 
-export type View = "Income" | "Expense" | "Sum"
+export type View = "Income" | "Expense"
