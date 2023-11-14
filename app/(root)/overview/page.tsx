@@ -2,15 +2,15 @@ import { auth } from "@clerk/nextjs"
 import OverviewClient from "./components/client"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
-import { getGraphTransactionsForThisWeek, getSumFromGraphData } from "@/actions/get-graph-transactions"
+import { getMonthlyChartData } from "@/actions/get-monthly-chart-data"
+import { getGraphTransactionsForThisWeek } from "@/actions/get-graph-transactions"
 
 const DashboardPage = async () => {
   const { userId } = auth()
   if (!userId) return
 
   const graphData = await getGraphTransactionsForThisWeek(userId)
-  const weeklyIncome = getSumFromGraphData(graphData)
-  const weeklyExpense = getSumFromGraphData(graphData, false)
+  const pieChartData = await getMonthlyChartData(userId)
 
   return (
     <div className="flex-col">
@@ -22,8 +22,7 @@ const DashboardPage = async () => {
         <Separator />
         <OverviewClient
           initGraphData={graphData}
-          initWeeklyIncome={weeklyIncome}
-          initWeeklyExpense={weeklyExpense}
+          initPieChartData={pieChartData}
         />
       </div>
     </div>

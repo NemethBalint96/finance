@@ -4,7 +4,7 @@ import { getWeeklyTransactions } from "./get-weekly-transactions"
 
 const initValue = { income: 0, expense: 0 }
 
-export function templateGraphData(): GraphData[] {
+export const templateGraphData = (): GraphData[] => {
   return [
     { name: "Sun", ...initValue },
     { name: "Mon", ...initValue },

@@ -2,6 +2,7 @@ import axios from "axios"
 import React, { useCallback, useEffect, useState } from "react"
 import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts"
 import { PieChartData, View } from "@/types"
+import { getSumFromPieChartData } from "@/actions/get-monthly-chart-data"
 
 const renderActiveShape = (props: any) => {
   const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props
@@ -50,19 +51,22 @@ const renderActiveShape = (props: any) => {
 }
 
 interface CustomActiveShapePieChartProps {
+  initPieChartData: PieChartData[]
   isoString: String
   setIncome: React.Dispatch<React.SetStateAction<number>>
   setExpense: React.Dispatch<React.SetStateAction<number>>
   view: View
 }
 
-const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({
+const CustomActiveShapePieChart = ({
+  initPieChartData,
   isoString,
   setIncome,
   setExpense,
   view,
-}) => {
+}: CustomActiveShapePieChartProps) => {
   const [pieChartData, setPieChartData] = useState<PieChartData[]>([])
+  const [data, setData] = useState<PieChartData[]>(initPieChartData)
   const [activeIndex, setActiveIndex] = useState(0)
   const onPieEnter = useCallback(
     (_: any, index: any) => {
@@ -72,12 +76,34 @@ const CustomActiveShapePieChart: React.FC<CustomActiveShapePieChartProps> = ({
   )
 
   useEffect(() => {
+    setIncome(getSumFromPieChartData(data))
+    setExpense(getSumFromPieChartData(data, false))
+  }, [])
+
+  useEffect(() => {
     axios.get(`/api/transactions/monthly?dateISO=${isoString}&view=${view}`).then((res) => {
-      setPieChartData(res.data.pieChartData)
+      setData(res.data.pieChartData)
       setIncome(res.data.income)
       setExpense(res.data.expense)
     })
   }, [isoString])
+
+  useEffect(() => {
+    let filteredData
+
+    if (view === "Income") {
+      filteredData = data.filter((item: PieChartData) => item.value > 0)
+    } else {
+      filteredData = data
+        .filter((data: PieChartData) => data.value < 0)
+        .map((item: PieChartData) => ({
+          ...item,
+          value: Math.abs(item.value),
+        }))
+    }
+
+    setPieChartData(filteredData)
+  }, [data, view])
 
   return (
     <ResponsiveContainer

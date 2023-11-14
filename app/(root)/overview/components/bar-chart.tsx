@@ -18,6 +18,11 @@ const PosNegBarChart: React.FC<ChartProps> = ({ initGraphData, isoString, setInc
   const [graphData, setGraphData] = useState<GraphData[]>(initGraphData)
 
   useEffect(() => {
+    setIncome(getSumFromGraphData(graphData))
+    setExpense(getSumFromGraphData(graphData, false))
+  }, [])
+
+  useEffect(() => {
     axios.get(`/api/transactions/weekly?dateISO=${isoString}`).then((res) => {
       setGraphData(res.data)
       const incomes = getSumFromGraphData(res.data)
