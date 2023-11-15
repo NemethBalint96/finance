@@ -159,7 +159,7 @@ model Transaction {
   category        TransactionCategory? @relation(fields: [categoryId], references: [id])
   createdAt       DateTime             @default(now())
   updatedAt       DateTime             @default(now()) @updatedAt
-  transactionTime DateTime             @default(now())
+  transactionDate DateTime             @default(now())
 
   @@index([categoryId])
 }
