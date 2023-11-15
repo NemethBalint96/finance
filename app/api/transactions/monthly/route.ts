@@ -1,9 +1,9 @@
-import { WhereClause } from "@/actions/get-weekly-transactions"
-import prismadb from "@/lib/prismadb"
-import { PieChartData, View } from "@/types"
 import { auth } from "@clerk/nextjs"
-import { Transaction } from "@prisma/client"
 import { NextResponse } from "next/server"
+import prismadb from "@/lib/prismadb"
+import { PieChartData } from "@/types"
+import { Transaction } from "@prisma/client"
+import { WhereClause } from "@/actions/get-weekly-transactions"
 
 export async function GET(req: Request) {
   try {
@@ -12,8 +12,6 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url)
     const isoString = searchParams.get("dateISO")
-    const view = searchParams.get("view") as View
-
     if (!isoString) return new NextResponse("Incorrect params", { status: 400 })
 
     const date = new Date(isoString)
@@ -27,13 +25,8 @@ export async function GET(req: Request) {
       createdAt: { gte: startOfMonth, lte: endOfMonth },
     }
 
-    const viewClause = { price: view === "Income" ? { gt: 0 } : { lt: 0 } }
-
     const monthlytransactionsWithCategory = await prismadb.transaction.findMany({
-      where: {
-        ...whereClause,
-        //  ...viewClause
-      },
+      where: whereClause,
       include: { category: true },
     })
 

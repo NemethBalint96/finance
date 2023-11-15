@@ -5,8 +5,8 @@ import { ColumnDef } from "@tanstack/react-table"
 
 export type TodayIncomeColumn = {
   name: String
-  count: Number
-  sum: Number
+  count: number
+  sum: number
 }
 
 export const todayIncomeColumns: ColumnDef<TodayIncomeColumn>[] = [
