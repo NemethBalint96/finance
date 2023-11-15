@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs"
 import { format } from "date-fns"
 import prismadb from "@/lib/prismadb"
+import { TransactionColumn } from "@/types"
 import ExpenseClient from "./components/client"
-import { ExpenseColumn } from "./components/columns"
 
 const ExpensePage = async () => {
   const { userId } = auth()
@@ -12,10 +12,8 @@ const ExpensePage = async () => {
     where: { userId, price: { lt: 0 } },
     orderBy: { transactionDate: "desc" },
   })
-
-  const formattedExpense: ExpenseColumn[] = expense.map((item) => ({
-    id: item.id,
-    name: item.name,
+  const formattedExpense: TransactionColumn[] = expense.map((item) => ({
+    ...item,
     price: Math.abs(item.price),
     transactionDate: format(item.transactionDate, "MMM dd yyyy"),
   }))

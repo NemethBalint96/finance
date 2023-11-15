@@ -2,11 +2,12 @@
 
 import { Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { TransactionColumn } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 import { DataTable } from "@/components/ui/data-table"
-import { TodayIncomeColumn, TransactionColumn, incomeColumns, todayIncomeColumns } from "./columns"
+import { TodayIncomeColumn, incomeColumns, todayIncomeColumns } from "./columns"
 
 interface IncomeClientProps {
   todayData: TodayIncomeColumn[]

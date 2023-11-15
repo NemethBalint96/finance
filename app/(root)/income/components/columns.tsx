@@ -1,7 +1,7 @@
 "use client"
 
+import { TransactionColumn } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
-import CellAction from "./cell-action"
 
 export type TodayIncomeColumn = {
   name: String
@@ -24,13 +24,6 @@ export const todayIncomeColumns: ColumnDef<TodayIncomeColumn>[] = [
   },
 ]
 
-export type TransactionColumn = {
-  id: string
-  name: string
-  price: number
-  createdAt: string
-}
-
 export const incomeColumns: ColumnDef<TransactionColumn>[] = [
   {
     accessorKey: "name",
@@ -41,11 +34,7 @@ export const incomeColumns: ColumnDef<TransactionColumn>[] = [
     header: "Price",
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "transactionDate",
     header: "Date",
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => <CellAction data={row.original} />,
   },
 ]

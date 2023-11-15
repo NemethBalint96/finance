@@ -1,8 +1,8 @@
 import { format } from "date-fns"
 import { auth } from "@clerk/nextjs"
 import prismadb from "@/lib/prismadb"
+import { TransactionColumn } from "@/types"
 import IncomeClient from "./components/client"
-import { TransactionColumn } from "./components/columns"
 import { getTodayIncome } from "@/actions/get-today-income"
 
 const IncomePage = async () => {
@@ -12,12 +12,11 @@ const IncomePage = async () => {
   const todayIncome = await getTodayIncome(userId)
   const income = await prismadb.transaction.findMany({
     where: { userId, price: { gt: 0 } },
-    orderBy: { createdAt: "desc" },
+    orderBy: { transactionDate: "desc" },
   })
-
   const formattedIncome: TransactionColumn[] = income.map((item) => ({
     ...item,
-    createdAt: format(item.createdAt, "MMM dd yyyy"),
+    transactionDate: format(item.transactionDate, "MMM dd yyyy"),
   }))
 
   return (

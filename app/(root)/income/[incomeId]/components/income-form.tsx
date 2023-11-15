@@ -4,8 +4,8 @@ import * as z from "zod"
 import axios from "axios"
 import { useState } from "react"
 import toast from "react-hot-toast"
-import { useForm } from "react-hook-form"
 import { CalendarIcon, Trash2 } from "lucide-react"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useParams, useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -21,7 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 
-interface ExpenseFormProps {
+interface IncomeFormProps {
   initialData: Transaction | null
   categories: TransactionCategory[]
 }
@@ -33,43 +33,38 @@ const formSchema = z.object({
   transactionDate: z.date().optional(),
 })
 
-type ExpenseFormValues = z.infer<typeof formSchema>
+type IncomeFormValues = z.infer<typeof formSchema>
 
-const ExpenseForm = ({ initialData, categories }: ExpenseFormProps) => {
+const IncomeForm = ({ initialData, categories }: IncomeFormProps) => {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const params = useParams()
   const router = useRouter()
 
-  const title = initialData ? "Edit expense" : "Create expense"
-  const description = initialData ? "Edit expense" : "Add a new expense"
-  const toastMessage = initialData ? "Expense updated." : "Expense created."
+  const title = initialData ? "Edit income" : "Create income"
+  const description = initialData ? "Edit income" : "Add a new income"
+  const toastMessage = initialData ? "Income updated." : "Income created."
   const action = initialData ? "Save changes" : "Create"
 
-  if (initialData) {
-    initialData.price = Math.abs(initialData.price)
-  }
-
-  const form = useForm<ExpenseFormValues>({
+  const form = useForm<IncomeFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: { ...initialData, categoryId: initialData?.categoryId ? initialData.categoryId : "" } || {
-      name: "",
+      name: "Tip",
       price: 1,
       categoryId: "",
     },
   })
 
-  const onSubmit = async (data: ExpenseFormValues) => {
+  const onSubmit = async (data: IncomeFormValues) => {
     try {
       setLoading(true)
-      data.price = -data.price
       if (initialData) {
-        await axios.patch(`/api/transactions/${params.expenseId}`, data)
+        await axios.patch(`/api/transactions/${params.incomeId}`, data)
       } else {
         await axios.post("/api/transactions", data)
       }
       router.refresh()
-      router.push("/expense")
+      router.push("/income")
       toast.success(toastMessage)
     } catch (error) {
       toast.error("Something went wrong.")
@@ -81,10 +76,10 @@ const ExpenseForm = ({ initialData, categories }: ExpenseFormProps) => {
   const onDelete = async () => {
     try {
       setLoading(true)
-      await axios.delete(`/api/transactions/${params.expenseId}`)
+      await axios.delete(`/api/transactions/${params.incomeId}`)
       router.refresh()
-      router.push("/expense")
-      toast.success("Expense deleted.")
+      router.push("/income")
+      toast.success("Income deleted.")
     } catch (error) {
       toast.error("Something went wrong.")
     } finally {
@@ -132,7 +127,7 @@ const ExpenseForm = ({ initialData, categories }: ExpenseFormProps) => {
                 <FormControl>
                   <Input
                     disabled={loading}
-                    placeholder="expense name"
+                    placeholder="income name"
                     {...field}
                   />
                 </FormControl>
@@ -232,7 +227,7 @@ const ExpenseForm = ({ initialData, categories }: ExpenseFormProps) => {
             className="w-full"
             disabled={loading}
           >
-            {action}
+            Create
           </Button>
         </form>
       </Form>
@@ -240,4 +235,4 @@ const ExpenseForm = ({ initialData, categories }: ExpenseFormProps) => {
   )
 }
 
-export default ExpenseForm
+export default IncomeForm
