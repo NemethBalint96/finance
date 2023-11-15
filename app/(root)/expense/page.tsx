@@ -9,15 +9,15 @@ const ExpensePage = async () => {
   if (!userId) return
 
   const expense = await prismadb.transaction.findMany({
-    where: { userId: userId, price: { lt: 0 } },
-    orderBy: { createdAt: "desc" },
+    where: { userId, price: { lt: 0 } },
+    orderBy: { transactionDate: "desc" },
   })
 
   const formattedExpense: ExpenseColumn[] = expense.map((item) => ({
     id: item.id,
     name: item.name,
     price: Math.abs(item.price),
-    createdAt: format(item.createdAt, "MMM dd yyyy"),
+    transactionDate: format(item.transactionDate, "MMM dd yyyy"),
   }))
 
   return (
