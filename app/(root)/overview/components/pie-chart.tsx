@@ -81,7 +81,7 @@ const CustomActiveShapePieChart = ({
   }, [])
 
   useEffect(() => {
-    axios.get(`/api/transactions/monthly?dateISO=${isoString}&view=${view}`).then((res) => {
+    axios.get(`/api/transactions/monthly?dateISO=${isoString}`).then((res) => {
       setData(res.data.pieChartData)
       setIncome(res.data.income)
       setExpense(res.data.expense)

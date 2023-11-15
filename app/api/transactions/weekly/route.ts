@@ -21,7 +21,7 @@ export async function GET(req: Request) {
 
     const whereClause: WhereClause = {
       userId,
-      createdAt: { gte: startOfWeek, lte: endOfWeek },
+      transactionDate: { gte: startOfWeek, lte: endOfWeek },
     }
 
     const transactions = await prismadb.transaction.findMany({

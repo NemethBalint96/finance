@@ -24,7 +24,7 @@ export const getWeeklyGraphDataFromTransactions = (transactions: Transaction[]) 
   const weeklyTransactions: { [key: number]: { income: number; expense: number } } = {}
 
   for (const transaction of transactions) {
-    const day = transaction.createdAt.getDay()
+    const day = transaction.transactionDate.getDay()
 
     if (!weeklyTransactions[day]) {
       weeklyTransactions[day] = { income: 0, expense: 0 }
