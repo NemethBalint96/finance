@@ -22,7 +22,7 @@ const IncomeClient = ({ todayData, data }: IncomeClientProps) => {
       <div className="flex items-center justify-between">
         <Heading
           title="Income"
-          description="Today's income"
+          description={`Today's income (${todayData.reduce((count, data) => count + data.count, 0)})`}
         />
         <Button onClick={() => router.push("/income/new")}>
           <Plus className="mr-2 h-4 w-4" />
@@ -37,7 +37,7 @@ const IncomeClient = ({ todayData, data }: IncomeClientProps) => {
       <div className="flex items-center justify-between">
         <Heading
           title=""
-          description="Manage income"
+          description={`Menage income (${data.length})`}
         />
       </div>
       <DataTable
