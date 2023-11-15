@@ -6,7 +6,7 @@ const ExpensePage = async () => {
   const { userId } = auth()
   if (!userId) return
 
-  const categories = await prismadb.transactionCategory.findMany({ where: { userId: userId, serviceId: null } })
+  const categories = await prismadb.transactionCategory.findMany({ where: { userId, serviceId: null } })
 
   return (
     <div className="flex-col">

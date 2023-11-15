@@ -9,16 +9,14 @@ const IncomePage = async () => {
   const { userId } = auth()
   if (!userId) return
 
-  const formattedTodayIncome = await getTodayIncome(userId)
+  const todayIncome = await getTodayIncome(userId)
   const income = await prismadb.transaction.findMany({
-    where: { userId: userId, price: { gt: 0 } },
+    where: { userId, price: { gt: 0 } },
     orderBy: { createdAt: "desc" },
   })
 
   const formattedIncome: TransactionColumn[] = income.map((item) => ({
-    id: item.id,
-    name: item.name,
-    price: item.price,
+    ...item,
     createdAt: format(item.createdAt, "MMM dd yyyy"),
   }))
 
@@ -26,7 +24,7 @@ const IncomePage = async () => {
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <IncomeClient
-          todayData={formattedTodayIncome}
+          todayData={todayIncome}
           data={formattedIncome}
         />
       </div>

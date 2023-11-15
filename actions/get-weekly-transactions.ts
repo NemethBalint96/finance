@@ -13,7 +13,7 @@ export const getWeeklyTransactions = async (userId: string) => {
 
   const weeklyTransactions = await prismadb.transaction.findMany({
     where: {
-      userId: userId,
+      userId,
       createdAt: { gte: startOfWeek },
     },
   })

@@ -16,7 +16,7 @@ const ExpensePage = async ({ params }: ExpensePageProps) => {
     where: { id: params.expenseId },
     include: { category: true },
   })
-  const categories = await prismadb.transactionCategory.findMany({ where: { userId: userId, serviceId: null } })
+  const categories = await prismadb.transactionCategory.findMany({ where: { userId, serviceId: null } })
 
   return (
     <div className="flex-col">

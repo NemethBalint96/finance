@@ -9,7 +9,7 @@ export const getMonthlyChartData = async (userId: string) => {
   endOfMonth.setMonth(startOfMonth.getMonth() + 1)
 
   const whereClause: WhereClause = {
-    userId: userId,
+    userId,
     createdAt: { gte: startOfMonth, lte: endOfMonth },
   }
 

@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       return new NextResponse("Name is required", { status: 400 })
     }
 
-    const category = await prismadb.transactionCategory.create({ data: { name, userId: userId, color } })
+    const category = await prismadb.transactionCategory.create({ data: { name, userId, color } })
 
     return NextResponse.json(category)
   } catch (error) {
@@ -34,7 +34,7 @@ export async function GET() {
       return new NextResponse("Unathenticated", { status: 401 })
     }
 
-    const caregories = await prismadb.transactionCategory.findMany({ where: { userId: userId } })
+    const caregories = await prismadb.transactionCategory.findMany({ where: { userId } })
 
     return NextResponse.json(caregories)
   } catch (error) {
