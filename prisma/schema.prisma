@@ -151,13 +151,15 @@ model Service {
 }
 
 model Transaction {
-  id         String               @id @default(uuid())
-  userId     String
-  name       String
-  price      Int
-  categoryId String?
-  category   TransactionCategory? @relation(fields: [categoryId], references: [id])
-  createdAt  DateTime             @default(now())
+  id              String               @id @default(uuid())
+  userId          String
+  name            String
+  price           Int
+  categoryId      String?
+  category        TransactionCategory? @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @default(now()) @updatedAt
+  transactionTime DateTime             @default(now())
 
   @@index([categoryId])
 }
