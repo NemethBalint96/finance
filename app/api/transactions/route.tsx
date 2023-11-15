@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return new NextResponse("Unathenticated", { status: 401 })
     }
 
-    const { name, price, categoryId } = body
+    const { name, price, categoryId, transactionDate } = body
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 })
@@ -21,7 +21,9 @@ export async function POST(req: Request) {
       return new NextResponse("Price is required", { status: 400 })
     }
 
-    const transaction = await prismadb.transaction.create({ data: { name, price, userId, categoryId } })
+    const transaction = await prismadb.transaction.create({
+      data: { name, price, userId, categoryId, transactionDate },
+    })
 
     return NextResponse.json(transaction)
   } catch (error) {
@@ -38,7 +40,7 @@ export async function GET() {
       return new NextResponse("Unathenticated", { status: 401 })
     }
 
-    const transaction = await prismadb.transaction.findMany({ where: { userId: userId } })
+    const transaction = await prismadb.transaction.findMany({ where: { userId } })
 
     return NextResponse.json(transaction)
   } catch (error) {

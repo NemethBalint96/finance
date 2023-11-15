@@ -41,7 +41,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   const handleRowClick = (data: TData) => {
     const { id } = data as TData extends HasId ? TData : never
     if (!id) return
-    if (pathname === "/income") return
     const newPathName = `${pathname}${pathname === "/" ? "" : "/"}${id}`
     router.push(newPathName)
   }
@@ -66,7 +65,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                className={pathname !== "/income" ? "hover:cursor-pointer" : ""}
+                className="hover:cursor-pointer"
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
                 onClick={() => handleRowClick(row.original)}

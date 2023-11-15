@@ -1,15 +1,9 @@
 "use client"
 
+import { TransactionColumn } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
 
-export type ExpenseColumn = {
-  id: string
-  name: string
-  price: number
-  createdAt: string
-}
-
-export const columns: ColumnDef<ExpenseColumn>[] = [
+export const columns: ColumnDef<TransactionColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -19,7 +13,7 @@ export const columns: ColumnDef<ExpenseColumn>[] = [
     header: "Price",
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "transactionDate",
     header: "Date",
   },
 ]

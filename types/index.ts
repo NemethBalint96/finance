@@ -11,3 +11,10 @@ export interface GraphData {
 }
 
 export type View = "Income" | "Expense"
+
+export type TransactionColumn = {
+  id: string
+  name: string
+  price: number
+  transactionDate: string
+}

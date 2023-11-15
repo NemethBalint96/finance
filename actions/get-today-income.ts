@@ -7,7 +7,7 @@ export const getTodayIncome = async (userId: string) => {
 
   const dailyIncome = await prismadb.transaction.groupBy({
     by: ["name"],
-    where: { userId: userId, createdAt: { gte: today }, price: { gt: 0 } },
+    where: { userId, createdAt: { gte: today }, price: { gt: 0 } },
     _count: { name: true },
     _sum: { price: true },
   })

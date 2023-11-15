@@ -22,7 +22,7 @@ export async function GET(req: Request) {
       endOfWeek.setDate(startOfWeek.getDate() + 6)
 
       const whereClause: WhereClause = {
-        userId: userId,
+        userId,
         createdAt: { gte: startOfWeek, lte: endOfWeek },
       }
 

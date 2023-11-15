@@ -1,19 +1,19 @@
 import { auth } from "@clerk/nextjs"
 import prismadb from "@/lib/prismadb"
-import ExpenseForm from "./components/expense-form"
+import IncomeForm from "./components/income-form"
 
-interface ExpensePageProps {
+interface IncomePageProps {
   params: {
-    expenseId: string
+    incomeId: string
   }
 }
 
-const ExpensePage = async ({ params }: ExpensePageProps) => {
+const IncomePage = async ({ params }: IncomePageProps) => {
   const { userId } = auth()
   if (!userId) return
 
-  const expense = await prismadb.transaction.findUnique({
-    where: { id: params.expenseId },
+  const income = await prismadb.transaction.findUnique({
+    where: { id: params.incomeId },
     include: { category: true },
   })
   const categories = await prismadb.transactionCategory.findMany({ where: { userId, serviceId: null } })
@@ -21,8 +21,8 @@ const ExpensePage = async ({ params }: ExpensePageProps) => {
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <ExpenseForm
-          initialData={expense}
+        <IncomeForm
+          initialData={income}
           categories={categories}
         />
       </div>
@@ -30,4 +30,4 @@ const ExpensePage = async ({ params }: ExpensePageProps) => {
   )
 }
 
-export default ExpensePage
+export default IncomePage

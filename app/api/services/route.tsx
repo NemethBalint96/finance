@@ -40,7 +40,7 @@ export async function GET() {
       return new NextResponse("Unathenticated", { status: 401 })
     }
 
-    const services = await prismadb.service.findMany({ where: { userId: userId } })
+    const services = await prismadb.service.findMany({ where: { userId } })
 
     return NextResponse.json(services)
   } catch (error) {
