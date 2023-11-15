@@ -19,7 +19,7 @@ const IncomePage = async () => {
     id: item.id,
     name: item.name,
     price: item.price,
-    createdAt: format(item.createdAt, "MMMM do, yyyy"),
+    createdAt: format(item.createdAt, "MMM dd yyyy"),
   }))
 
   return (
