@@ -2,13 +2,14 @@
 
 import { Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { columns } from "./columns"
+import { TransactionColumn } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Heading } from "@/components/ui/heading"
-import { ExpenseColumn, columns } from "./columns"
 import { DataTable } from "@/components/ui/data-table"
 
 interface ExpenseClientProps {
-  data: ExpenseColumn[]
+  data: TransactionColumn[]
 }
 
 const ExpenseClient = ({ data }: ExpenseClientProps) => {
