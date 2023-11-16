@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs"
-import { format } from "date-fns"
 import prismadb from "@/lib/prismadb"
 import { TransactionColumn } from "@/types"
+import { formatDate } from "@/lib/utils"
 import ExpenseClient from "./components/client"
 
 const ExpensePage = async () => {
@@ -15,7 +15,7 @@ const ExpensePage = async () => {
   const formattedExpense: TransactionColumn[] = expense.map((item) => ({
     ...item,
     price: Math.abs(item.price),
-    transactionDate: format(item.transactionDate, "MMM dd yyyy"),
+    transactionDate: formatDate(item.transactionDate),
   }))
 
   return (
