@@ -14,6 +14,7 @@ export async function GET(req: Request) {
     if (!isoString) return new NextResponse("Incorrect params", { status: 400 })
 
     const date = new Date(isoString)
+    date.setHours(0, 0, 0, 0)
     const startOfWeek = new Date(date)
     let day = date.getDay()
     if (day === 0) day = 7
