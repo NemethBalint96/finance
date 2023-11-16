@@ -1,4 +1,4 @@
-import { format } from "date-fns"
+import { formatInTimeZone } from "date-fns-tz"
 import { hu } from "date-fns/locale"
 import { twMerge } from "tailwind-merge"
 import { type ClassValue, clsx } from "clsx"
@@ -14,5 +14,5 @@ export const formatter = new Intl.NumberFormat("hu-HU", {
 })
 
 export const formatDateTime = (date: Date): string => {
-  return format(date, "MMM dd yyyy HH:mm", { locale: hu })
+  return formatInTimeZone(date, "Europe/Budapest", "MMM dd yyyy HH:mm", { locale: hu })
 }
