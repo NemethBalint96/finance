@@ -9,7 +9,9 @@ export interface WhereClause {
 export const getWeeklyTransactions = async (userId: string) => {
   const startOfWeek = new Date()
   startOfWeek.setHours(0, 0, 0, 0)
-  startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay())
+  let day = startOfWeek.getDay()
+  if (day === 0) day = 7
+  startOfWeek.setDate(startOfWeek.getDate() - day + 1)
 
   const weeklyTransactions = await prismadb.transaction.findMany({
     where: {
