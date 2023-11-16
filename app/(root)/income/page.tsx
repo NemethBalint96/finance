@@ -1,6 +1,6 @@
-import { format } from "date-fns"
 import { auth } from "@clerk/nextjs"
 import prismadb from "@/lib/prismadb"
+import { formatDate } from "@/lib/utils"
 import { TransactionColumn } from "@/types"
 import IncomeClient from "./components/client"
 import { getTodayIncome } from "@/actions/get-today-income"
@@ -16,7 +16,7 @@ const IncomePage = async () => {
   })
   const formattedIncome: TransactionColumn[] = income.map((item) => ({
     ...item,
-    transactionDate: format(item.transactionDate, "MMM dd yyyy"),
+    transactionDate: formatDate(item.transactionDate),
   }))
 
   return (
