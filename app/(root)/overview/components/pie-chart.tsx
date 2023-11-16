@@ -14,7 +14,7 @@ const renderActiveShape = (props: any) => {
         y={cy - 10}
         dy={8}
         textAnchor="middle"
-        fill={fill}
+        fill="#999"
       >
         {`${payload.name} ${value}`}
       </text>

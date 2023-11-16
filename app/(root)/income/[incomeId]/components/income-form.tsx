@@ -46,13 +46,18 @@ const IncomeForm = ({ initialData, categories }: IncomeFormProps) => {
   const toastMessage = initialData ? "Income updated." : "Income created."
   const action = initialData ? "Save changes" : "Create"
 
+  const defaultValues = initialData
+    ? { ...initialData, categoryId: initialData?.categoryId ? initialData.categoryId : undefined }
+    : {
+        name: "Tip",
+        price: undefined,
+        categoryId: undefined,
+        transactionDate: undefined,
+      }
+
   const form = useForm<IncomeFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { ...initialData, categoryId: initialData?.categoryId ? initialData.categoryId : "" } || {
-      name: "Tip",
-      price: 1,
-      categoryId: "",
-    },
+    defaultValues: defaultValues,
   })
 
   const onSubmit = async (data: IncomeFormValues) => {
@@ -144,6 +149,7 @@ const IncomeForm = ({ initialData, categories }: IncomeFormProps) => {
                 <FormControl>
                   <Input
                     type="number"
+                    placeholder="income amount"
                     disabled={loading}
                     {...field}
                   />
@@ -204,10 +210,7 @@ const IncomeForm = ({ initialData, categories }: IncomeFormProps) => {
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto p-0"
-                    align="end"
-                  >
+                  <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
                       selected={field.value}
@@ -227,7 +230,7 @@ const IncomeForm = ({ initialData, categories }: IncomeFormProps) => {
             className="w-full"
             disabled={loading}
           >
-            Create
+            {action}
           </Button>
         </form>
       </Form>
