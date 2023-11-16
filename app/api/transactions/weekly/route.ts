@@ -15,13 +15,15 @@ export async function GET(req: Request) {
 
     const date = new Date(isoString)
     const startOfWeek = new Date(date)
-    startOfWeek.setDate(date.getDate() - date.getDay())
+    let day = date.getDay()
+    if (day === 0) day = 7
+    startOfWeek.setDate(date.getDate() - day + 1)
     const endOfWeek = new Date(startOfWeek)
-    endOfWeek.setDate(startOfWeek.getDate() + 6)
+    endOfWeek.setDate(startOfWeek.getDate() + 7)
 
     const whereClause: WhereClause = {
       userId,
-      createdAt: { gte: startOfWeek, lte: endOfWeek },
+      transactionDate: { gte: startOfWeek, lte: endOfWeek },
     }
 
     const transactions = await prismadb.transaction.findMany({

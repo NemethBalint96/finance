@@ -14,7 +14,7 @@ const renderActiveShape = (props: any) => {
         y={cy - 10}
         dy={8}
         textAnchor="middle"
-        fill={fill}
+        fill="#999"
       >
         {`${payload.name} ${value}`}
       </text>
@@ -81,7 +81,7 @@ const CustomActiveShapePieChart = ({
   }, [])
 
   useEffect(() => {
-    axios.get(`/api/transactions/monthly?dateISO=${isoString}&view=${view}`).then((res) => {
+    axios.get(`/api/transactions/monthly?dateISO=${isoString}`).then((res) => {
       setData(res.data.pieChartData)
       setIncome(res.data.income)
       setExpense(res.data.expense)

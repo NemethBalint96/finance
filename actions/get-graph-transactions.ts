@@ -6,13 +6,13 @@ const initValue = { income: 0, expense: 0 }
 
 export const templateGraphData = (): GraphData[] => {
   return [
-    { name: "Sun", ...initValue },
     { name: "Mon", ...initValue },
     { name: "Thu", ...initValue },
     { name: "Wed", ...initValue },
     { name: "Tue", ...initValue },
     { name: "Fri", ...initValue },
     { name: "Sat", ...initValue },
+    { name: "Sun", ...initValue },
   ]
 }
 
@@ -24,7 +24,9 @@ export const getWeeklyGraphDataFromTransactions = (transactions: Transaction[]) 
   const weeklyTransactions: { [key: number]: { income: number; expense: number } } = {}
 
   for (const transaction of transactions) {
-    const day = transaction.createdAt.getDay()
+    let day = transaction.transactionDate.getDay()
+    if (day === 0) day = 6
+    else day--
 
     if (!weeklyTransactions[day]) {
       weeklyTransactions[day] = { income: 0, expense: 0 }

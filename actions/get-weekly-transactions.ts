@@ -2,7 +2,7 @@ import prismadb from "@/lib/prismadb"
 
 export interface WhereClause {
   userId: string
-  createdAt: { gte: Date; lte?: Date }
+  transactionDate: { gte: Date; lte?: Date }
   price?: { gt?: number; lt?: number }
 }
 
@@ -14,7 +14,7 @@ export const getWeeklyTransactions = async (userId: string) => {
   const weeklyTransactions = await prismadb.transaction.findMany({
     where: {
       userId,
-      createdAt: { gte: startOfWeek },
+      transactionDate: { gte: startOfWeek },
     },
   })
 

@@ -50,13 +50,18 @@ const ExpenseForm = ({ initialData, categories }: ExpenseFormProps) => {
     initialData.price = Math.abs(initialData.price)
   }
 
+  const defaultValues = initialData
+    ? { ...initialData, categoryId: initialData?.categoryId ? initialData.categoryId : undefined }
+    : {
+        name: "",
+        price: undefined,
+        categoryId: undefined,
+        transactionDate: undefined,
+      }
+
   const form = useForm<ExpenseFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { ...initialData, categoryId: initialData?.categoryId ? initialData.categoryId : "" } || {
-      name: "",
-      price: 1,
-      categoryId: "",
-    },
+    defaultValues: defaultValues,
   })
 
   const onSubmit = async (data: ExpenseFormValues) => {
@@ -149,6 +154,7 @@ const ExpenseForm = ({ initialData, categories }: ExpenseFormProps) => {
                 <FormControl>
                   <Input
                     type="number"
+                    placeholder="expense amount"
                     disabled={loading}
                     {...field}
                   />
@@ -209,10 +215,7 @@ const ExpenseForm = ({ initialData, categories }: ExpenseFormProps) => {
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent
-                    className="w-auto p-0"
-                    align="end"
-                  >
+                  <PopoverContent className="w-auto p-0">
                     <Calendar
                       mode="single"
                       selected={field.value}

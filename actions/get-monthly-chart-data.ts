@@ -10,11 +10,11 @@ export const getMonthlyChartData = async (userId: string) => {
 
   const whereClause: WhereClause = {
     userId,
-    createdAt: { gte: startOfMonth, lte: endOfMonth },
+    transactionDate: { gte: startOfMonth, lte: endOfMonth },
   }
 
   const monthlytransactionsWithCategory = await prismadb.transaction.findMany({
-    where: { ...whereClause },
+    where: whereClause,
     include: { category: true },
   })
 
