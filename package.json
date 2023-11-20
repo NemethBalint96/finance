@@ -52,6 +52,7 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
+    "cypress": "^13.5.1",
     "prisma": "^5.5.2"
   }
 }
